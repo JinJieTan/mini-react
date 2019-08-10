@@ -1,5 +1,6 @@
 import { _render } from '../reactDom/index';
-import {renderComponent} from './utills'
+import { renderComponent } from './utills';
+import { enqueueSetState } from './setState';
 export class Component {
   constuctor(props = {}) {
     this.state = {};
@@ -10,6 +11,7 @@ export class Component {
     console.log('setstate');
     const newState = Object.assign(this.state, stateChange);
     console.log('state:', newState);
-    renderComponent(this,newState);
+    this.newState = newState;
+    enqueueSetState(newState, this);
   }
 }
