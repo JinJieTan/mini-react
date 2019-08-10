@@ -29,8 +29,6 @@ export function setComponentProps(component, props) {
   renderComponent(component);
 }
 
-
-
 export function renderComponent(component, newState = {}) {
   //dom
   console.log('renderComponent');
@@ -46,7 +44,10 @@ export function renderComponent(component, newState = {}) {
     let result = true;
     result =
       component.shouldComponentUpdate &&
-      component.shouldComponentUpdate((component.props = {}), newState);
+      component.shouldComponentUpdate(
+        (component.props = {}),
+        component.newState
+      );
     if (!result) {
       return;
     }
