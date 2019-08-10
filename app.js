@@ -3,35 +3,51 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      test: 'init'
+      test: 0
     };
-    this.test=[1,2,3]
   }
-  
-  handleClick(e){
+
+  handleClick(e) {
     this.setState({
-        test:'test'
-    })
+      test: this.state.test + 1
+    });
   }
-  componentDidMount(){
-      console.log('mount')
-      this.setState({
-        test:'mount'
-      })
+
+  componentDidMount() {
+    console.log('mount');
+    this.setState({
+      test: 1
+    });
   }
-  componentWillMount(){
-    console.log('willMount')
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.test > 3) {
+      console.log('shouldComponentUpdate中限制了更新')
+      return false;
+    }
+    return true;
   }
-  componentWillUpdate(){
-    console.log('willupdate')
+  componentWillMount() {
+    console.log('willMount');
   }
-  componentDidUpdate(){
-    console.log('didupdate')
+  componentWillUpdate() {
+    console.log('willupdate');
+  }
+  componentDidUpdate() {
+    console.log('didupdate');
   }
   render() {
-    return <div>
-    <span>{this.state.test}</span>
-    <button onClick={this.handleClick.bind(this)}>改变状态</button>
-    </div>;
+    return (
+      <div>
+        <span>{this.state.test}</span>
+        <button onClick={this.handleClick.bind(this)}>改变状态</button>
+        <ul>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+        </ul>
+      </div>
+    );
   }
 }

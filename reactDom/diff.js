@@ -1,7 +1,7 @@
 import { Componet } from '../react';
-import { setAttribute } from './dom';
-
-/*
+import handleAttrs from '../reactDom/handleAttrs';
+import {setComponentProps} from '../components/component'
+/**
  * @param {HTMLElement} dom 真实DOM
  * @param {vnode} vnode 虚拟DOM
  * @param {HTMLElement} container 容器
@@ -17,7 +17,7 @@ export function diff(dom, vnode, container) {
   return ret;
 }
 
-function diffNode(dom, vnode) {
+export function diffNode(dom, vnode) {
   let out = dom;
 
   if (vnode === undefined || vnode === null || typeof vnode === 'boolean')
@@ -40,6 +40,7 @@ function diffNode(dom, vnode) {
         dom.parentNode.replaceChild(out, dom);
       }
     }
+
     return out;
   }
 
@@ -74,8 +75,9 @@ function diffNode(dom, vnode) {
 
 function diffChildren(dom, vchildren) {
   const domChildren = dom.childNodes;
+  //没有key值的真实dom集合
   const children = [];
-
+  //有key值的集合 
   const keyed = {};
 
   if (domChildren.length > 0) {
@@ -83,7 +85,6 @@ function diffChildren(dom, vchildren) {
       const child = domChildren[i];
       const key = child.key;
       if (key) {
-        keyedLen++;
         keyed[key] = child;
       } else {
         children.push(child);
@@ -165,64 +166,12 @@ function diffComponent(dom, vnode) {
   return dom;
 }
 
-function setComponentProps(component, props) {
-  if (!component.base) {
-    if (component.componentWillMount) component.componentWillMount();
-  } else if (component.componentWillReceiveProps) {
-    component.componentWillReceiveProps(props);
-  }
-
-  component.props = props;
-
-  renderComponent(component);
-}
-
-export function renderComponent(component) {
-  let base;
-
-  const renderer = component.render();
-
-  if (component.base && component.componentWillUpdate) {
-    component.componentWillUpdate();
-  }
-
-  base = diffNode(component.base, renderer);
-
-  component.base = base;
-  base._component = component;
-
-  if (component.base) {
-    if (component.componentDidUpdate) component.componentDidUpdate();
-  } else if (component.componentDidMount) {
-    component.componentDidMount();
-  }
-
-  component.base = base;
-  base._component = component;
-}
-
-function createComponent(component, props) {
-  let inst;
-
-  if (component.prototype && component.prototype.render) {
-    inst = new component(props);
-  } else {
-    inst = new Component(props);
-    inst.constructor = component;
-    inst.render = function() {
-      return this.constructor(props);
-    };
-  }
-
-  return inst;
-}
-
-function unmountComponent(component) {
+export function unmountComponent(component) {
   if (component.componentWillUnmount) component.componentWillUnmount();
   removeNode(component.base);
 }
 
-function isSameNodeType(dom, vnode) {
+export function isSameNodeType(dom, vnode) {
   if (typeof vnode === 'string' || typeof vnode === 'number') {
     return dom.nodeType === 3;
   }
@@ -234,7 +183,7 @@ function isSameNodeType(dom, vnode) {
   return dom && dom._component && dom._component.constructor === vnode.tag;
 }
 
-function diffAttributes(dom, vnode) {
+export function diffAttributes(dom, vnode) {
   const old = {}; // 当前DOM的属性
   const attrs = vnode.attrs; // 虚拟DOM的属性
 
@@ -246,14 +195,14 @@ function diffAttributes(dom, vnode) {
   // 如果原来的属性不在新的属性当中，则将其移除掉（属性值设为undefined）
   for (let name in old) {
     if (!(name in attrs)) {
-      setAttribute(dom, name, undefined);
+      handleAttrs(dom, name, undefined);
     }
   }
 
   // 更新新的属性值
   for (let name in attrs) {
     if (old[name] !== attrs[name]) {
-      setAttribute(dom, name, attrs[name]);
+      handleAttrs(dom, name, attrs[name]);
     }
   }
 }
