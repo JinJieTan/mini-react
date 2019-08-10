@@ -1,5 +1,6 @@
 import handleAttrs from './handleAttrs';
-import { createComponent, setComponentProps } from '../components/component';
+import { createComponent, setComponentProps } from '../components/utills';
+
 const ReactDom = {};
 
 const render = function(vnode, container) {
@@ -7,6 +8,8 @@ const render = function(vnode, container) {
 };
 
 ReactDom.render = render;
+
+
 export function _render(vnode) {
   console.log('_render');
   if (vnode === undefined || vnode === null || typeof vnode === 'boolean')
@@ -37,7 +40,6 @@ export function _render(vnode) {
 
   return dom;
 }
-
 
 
 
