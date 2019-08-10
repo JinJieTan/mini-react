@@ -1,6 +1,6 @@
 import { Componet } from '../react';
 import handleAttrs from '../reactDom/handleAttrs';
-import {setComponentProps} from '../components/component'
+import {setComponentProps,createComponent} from '../components/utills'
 /**
  * @param {HTMLElement} dom 真实DOM
  * @param {vnode} vnode 虚拟DOM

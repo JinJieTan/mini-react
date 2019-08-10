@@ -19,22 +19,33 @@ export default class App extends React.Component {
       test: 1
     });
   }
+
+
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.test > 3) {
+    if (nextState.test > 5) {
       console.log('shouldComponentUpdate中限制了更新')
+      alert('shouldComponentUpdate中限制了更新')
       return false;
     }
     return true;
   }
+
+
   componentWillMount() {
     console.log('willMount');
   }
+
+
   componentWillUpdate() {
     console.log('willupdate');
   }
+
+
   componentDidUpdate() {
     console.log('didupdate');
   }
+
+
   render() {
     return (
       <div>
