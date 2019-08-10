@@ -1,4 +1,5 @@
 import { _render } from '../reactDom/index';
+import { diffNode } from '../reactDom/diff';
 export class Component {
   constuctor(props = {}) {
     this.state = {};
@@ -7,9 +8,9 @@ export class Component {
   setState(stateChange) {
     // 将修改合并到state
     console.log('setstate');
-    const result = Object.assign(this.state, stateChange);
-    console.log('state:', result);
-    renderComponent(this);
+    const newState = Object.assign(this.state, stateChange);
+    console.log('state:', newState);
+    renderComponent(this,newState);
   }
 }
 export function createComponent(component, props) {
@@ -39,32 +40,36 @@ export function setComponentProps(component, props) {
 
   renderComponent(component);
 }
-export function renderComponent(component) {
+export function renderComponent(component,newState) {
+  //dom
   console.log('renderComponent');
   let base;
-
+  //返回虚拟dom对象
   const renderer = component.render();
 
   if (component.base && component.componentWillUpdate) {
     component.componentWillUpdate();
   }
 
-  base = _render(renderer);
+  if (component.base && component.shouldComponentUpdate) {
+    let result = true;
+    result =
+      component.shouldComponentUpdate && component.shouldComponentUpdate(component.props={},newState);
+    if (!result) {
+      return;
+    }
+  }
+  //得到真实dom对象
+  base = diffNode(component.base, renderer);
 
   if (component.base) {
     if (component.componentDidUpdate) component.componentDidUpdate();
   } else {
     component.base = base;
+    base._component = component;
     component.componentDidMount && component.componentDidMount();
-    if (component.base && component.base.parentNode) {
-      component.base.parentNode.replaceChild(base, component.base);
-    }
     return;
   }
-  if (component.base && component.base.parentNode) {
-    component.base.parentNode.replaceChild(base, component.base);
-  }
-
   component.base = base;
   base._component = component;
 }
