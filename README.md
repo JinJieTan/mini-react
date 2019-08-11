@@ -5,7 +5,7 @@
 
 使用步骤 ：
 
-* `npm i parcel-bundler -g `
+* `npm install -g parcel-bundler`
 
 * `parcel index.html`
 
