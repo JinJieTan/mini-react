@@ -29,7 +29,7 @@ export function setComponentProps(component, props) {
   renderComponent(component);
 }
 
-export function renderComponent(component, newState = {}) {
+export function renderComponent(component) {
   //dom
   console.log('renderComponent');
   let base;
@@ -63,6 +63,9 @@ export function renderComponent(component, newState = {}) {
     component.componentDidMount && component.componentDidMount();
     return;
   }
+  //挂载真实的dom对象到对应的 组件上 方便后期对比
   component.base = base;
+
+  //挂载对应到组件到真实dom上 方便后期对比～
   base._component = component;
 }

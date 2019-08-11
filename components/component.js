@@ -1,5 +1,4 @@
 import { _render } from '../reactDom/index';
-import { renderComponent } from './utills';
 import { enqueueSetState } from './setState';
 export class Component {
   constuctor(props = {}) {
