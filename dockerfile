@@ -1,3 +1,6 @@
 FROM  node 
 EXPOSE 1234
-RUN parcel index.html
+RUN cd ./server
+RUN npm install 
+RUN cd ../
+CMD ["node","./server/index.js"]
