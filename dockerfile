@@ -1,8 +1,5 @@
-FROM  node 
+FROM nginx
+
+COPY ./index.html /dist/ /usr/share/nginx/html/
+
 EXPOSE 1234
-ADD . /react
-WORKDIR /react
-RUN cd ./server
-RUN npm install 
-RUN cd ../
-RUN node ./server/index.js
