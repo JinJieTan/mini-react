@@ -5,4 +5,4 @@ WORKDIR /react
 RUN cd ./server
 RUN npm install 
 RUN cd ../
-CMD ["node","./server/index.js"]
+RUN node ./server/index.js
