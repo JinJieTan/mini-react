@@ -9,7 +9,6 @@ before_install:
   - npm install -g parcel-bundler
 
 script:
-  - parcel index.html
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t jinjietan/mini-react:latest .
   - docker push jinjietan/mini-react:latest
