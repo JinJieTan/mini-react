@@ -16,15 +16,17 @@ function defer(fn) {
   //     console.log('requestIdleCallback');
   //     return requestIdleCallback(fn);
   //   }
-  //高优先级任务
+  //高优先级任务 异步的 先挂起 
   return requestAnimationFrame(fn);
 }
 
 export function enqueueSetState(stateChange, component) {
+  //第一次进来肯定会先调用defer函数
   if (setStateQueue.length === 0) {
     //清空队列的办法是异步执行,下面都是同步执行的一些计算
     defer(flush);
   }
+  // setStateQueue:[{state:{a:1},component:app},{state:{a:2},component:test},{state:{a:3},component:app}]
 
   //向队列中添加对象 key:stateChange value:component
   setStateQueue.push({
@@ -40,7 +42,7 @@ export function enqueueSetState(stateChange, component) {
 
 function flush() {
   let item, component;
-  //依次取出对象，执行
+  //依次取出对象，执行 
   while ((item = setStateQueue.shift())) {
     const { stateChange, component } = item;
 
@@ -62,7 +64,7 @@ function flush() {
 
     component.prevState = component.state;
   }
-
+  //先做一个处理合并state的队列，然后把state挂载到component下面 这样下面的队列，遍历时候，能也拿到state属性
   //依次取出组件，执行更新逻辑，渲染
   while ((component = renderQueue.shift())) {
     renderComponent(component);
