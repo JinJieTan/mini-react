@@ -52,8 +52,8 @@ export default class App extends React.Component {
         <span>{this.state.test}</span>
         <button onClick={this.handleClick.bind(this)}>改变状态</button>
         <ul>
-          <li>1</li>
-          <li>2</li>
+          <li onClick={xxx}>1</li> 
+          <li><a href="">测试</a></li>
           <li>3</li>
           <li>4</li>
           <li>5</li>

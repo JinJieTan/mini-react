@@ -9,10 +9,13 @@
 </head>
 
 <body>
-    <div id="root"></div>
+    <div id="test1">1</div>
+    <div id="test2"> 2</div>
 </body>
-<script src="./dist/index.js"></script>
 <script>
+    test1.innerHTML = 1111
+    //100KB的库 再经过diff算法，再dom操作
+    ReactDOM.render(<APP />, test2)
 </script>
 
 </html>
