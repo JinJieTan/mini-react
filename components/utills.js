@@ -33,7 +33,7 @@ export function renderComponent(component) {
   //dom
   console.log('renderComponent');
   let base;
-  //返回虚拟dom对象
+  //返回虚拟dom对象 调用render方法，会用到state 此时的state已经通过上面的队列更新了
   const renderer = component.render();
 
   if (component.base && component.componentWillUpdate) {
