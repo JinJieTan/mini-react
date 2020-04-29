@@ -1,11 +1,13 @@
 import { Component } from '../components/component';
+import useState from './useState';
 const React = {};
 React.Component = Component;
-React.createElement = function(tag, attrs, ...children) {
+export const myUseState = useState;
+React.createElement = function (tag, attrs, ...children) {
   return {
     tag,
     attrs,
-    children
+    children,
   };
 };
 export default React;

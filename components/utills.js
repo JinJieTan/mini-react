@@ -29,7 +29,6 @@ export function setComponentProps(component, props, isHook) {
 }
 
 export function renderComponent(component, isHook) {
-  //dom
   console.log('renderComponent', component);
   if (!isHook) {
     let base;
@@ -70,6 +69,11 @@ export function renderComponent(component, isHook) {
     base._component = component;
   } else {
     const renderer = component.render();
-    console.log(isHook,renderer);
+    console.log(renderer, 'renderer');
+    const { type, children = null } = renderer;
+    const dom = document.createElement(type);
+    dom.innerHTML = children;
+    component.base = dom;
+    dom._component = component;
   }
 }
