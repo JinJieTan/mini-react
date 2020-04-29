@@ -1,5 +1,5 @@
 import { diffNode } from '../reactDom/diff';
-
+import { Component } from './component';
 export function createComponent(component, props) {
   let inst;
   // 如果是类定义组件，则直接返回实例
@@ -9,15 +9,14 @@ export function createComponent(component, props) {
   } else {
     inst = new Component(props);
     inst.constructor = component;
-    inst.render = function() {
+    inst.render = function () {
       return this.constructor(props);
     };
   }
-
   return inst;
 }
 
-export function setComponentProps(component, props) {
+export function setComponentProps(component, props, isHook) {
   if (!component.base) {
     if (component.componentWillMount) component.componentWillMount();
   } else if (component.base && component.componentWillReceiveProps) {
@@ -26,46 +25,51 @@ export function setComponentProps(component, props) {
 
   component.props = props;
 
-  renderComponent(component);
+  renderComponent(component, isHook);
 }
 
-export function renderComponent(component) {
+export function renderComponent(component, isHook) {
   //dom
-  console.log('renderComponent');
-  let base;
-  //返回虚拟dom对象 调用render方法，会用到state 此时的state已经通过上面的队列更新了
-  const renderer = component.render();
+  console.log('renderComponent', component);
+  if (!isHook) {
+    let base;
+    //返回虚拟dom对象 调用render方法，会用到state 此时的state已经通过上面的队列更新了
+    const renderer = component.render();
 
-  if (component.base && component.componentWillUpdate) {
-    component.componentWillUpdate();
-  }
+    if (component.base && component.componentWillUpdate) {
+      component.componentWillUpdate();
+    }
 
-  if (component.base && component.shouldComponentUpdate) {
-    let result = true;
-    result =
-      component.shouldComponentUpdate &&
-      component.shouldComponentUpdate(
-        (component.props = {}),
-        component.newState
-      );
-    if (!result) {
+    if (component.base && component.shouldComponentUpdate) {
+      let result = true;
+      result =
+        component.shouldComponentUpdate &&
+        component.shouldComponentUpdate(
+          (component.props = {}),
+          component.newState
+        );
+      if (!result) {
+        return;
+      }
+    }
+    //得到真实dom对象
+    base = diffNode(component.base, renderer);
+    console.log(base, 'base');
+    if (component.base) {
+      if (component.componentDidUpdate) component.componentDidUpdate();
+    } else {
+      component.base = base;
+      base._component = component;
+      component.componentDidMount && component.componentDidMount();
       return;
     }
-  }
-  //得到真实dom对象
-  base = diffNode(component.base, renderer);
-
-  if (component.base) {
-    if (component.componentDidUpdate) component.componentDidUpdate();
-  } else {
+    //挂载真实的dom对象到对应的 组件上 方便后期对比
     component.base = base;
-    base._component = component;
-    component.componentDidMount && component.componentDidMount();
-    return;
-  }
-  //挂载真实的dom对象到对应的 组件上 方便后期对比
-  component.base = base;
 
-  //挂载对应到组件到真实dom上 方便后期对比～
-  base._component = component;
+    //挂载对应到组件到真实dom上 方便后期对比～
+    base._component = component;
+  } else {
+    const renderer = component.render();
+    console.log(isHook,renderer);
+  }
 }

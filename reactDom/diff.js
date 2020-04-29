@@ -1,6 +1,6 @@
-import { Componet } from '../react';
+import { Component } from '../react';
 import handleAttrs from '../reactDom/handleAttrs';
-import {setComponentProps,createComponent} from '../components/utills'
+import { setComponentProps, createComponent } from '../components/utills';
 /**
  * @param {HTMLElement} dom 真实DOM
  * @param {vnode} vnode 虚拟DOM
@@ -50,7 +50,7 @@ export function diffNode(dom, vnode) {
 
   //
   if (!dom || !isSameNodeType(dom, vnode)) {
-    out = document.createElement(vnode.tag);
+    out = document.createElement(vnode.tag || vnode.type);
 
     if (dom) {
       [...dom.childNodes].map(out.appendChild); // 将原来的子节点移到新节点下
@@ -77,7 +77,7 @@ function diffChildren(dom, vchildren) {
   const domChildren = dom.childNodes;
   //没有key值的真实dom集合
   const children = [];
-  //有key值的集合 
+  //有key值的集合
   const keyed = {};
 
   if (domChildren.length > 0) {
